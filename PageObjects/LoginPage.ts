@@ -5,13 +5,15 @@ export class LoginPage {
     private emailInput: Locator;
     private passwordInput: Locator;
     private submitButton: Locator;
+    private headerMenu: Locator;
     private logoutButton: Locator;
 
     constructor(private page: Page) {
         this.emailInput = this.page.locator('input[name="email"]');
         this.passwordInput = this.page.locator('input[name="password"]');
         this.submitButton = this.page.locator('button[type="submit"]');
-        this.logoutButton = this.page.locator('text=Logout');
+        this.headerMenu = this.page.locator("div[data-test-id='header-menu']");
+        this.logoutButton = this.page.locator('li[data-test-id="header-logout"]');
     }
 
     async goto() {
@@ -29,8 +31,8 @@ export class LoginPage {
     }
 
     async logout(): Promise<void> {
-        await this.page.click("//div[@data-test-id='header-menu']");
-        await this.page.click("//li[@data-test-id='header-logout']");
+        await this.headerMenu.click();
+        await this.logoutButton.click();
         await expect(this.page).toHaveURL('/authentication');
     }
 }

@@ -1,19 +1,27 @@
 // playwright.config.ts
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+  // Directory where test files are located
   testDir: './tests',
-  timeout: 30000,
-  retries: 1,
+
+  // Global test timeout
+  timeout: 80 * 1000, // 80 seconds per test
+
   globalSetup: require.resolve('./Setup/global-setup'),
+
+  // Reporters: HTML for local debugging, add more if needed (e.g. 'list', 'junit')
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {
     baseURL: 'https://demo.haroldwaste.com',
-    headless: false,
+    headless: false, // Set to false only for debugging locally
     viewport: { width: 1280, height: 720 },
+    ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'on-first-retry',
-    storageState: 'storageState.json'
+    storageState: 'storageState.json',
   },
-  reporter: [['html', { outputFolder: 'playwright-report' }]]
+  // Directory to store test artifacts (screenshots, videos, etc.)
+  outputDir: 'test-results',
 });

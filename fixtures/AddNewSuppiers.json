@@ -1,0 +1,9 @@
+{
+    "addANewSuppliers" : {
+        "legalEntityName": "Test Supplier Legal Entity Name",
+        "erpId": "1234567890", 
+        "legalForm": "Test Legal Form",
+        "identificationCode": "1234567890",
+        "locationIdentificationCode": "1234567890"
+    }
+  }

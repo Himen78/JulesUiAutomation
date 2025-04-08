@@ -1,0 +1,1 @@
+export const generateSupplierName = () => `Test Supplier_${Math.floor(Math.random() * 10000)}`;
