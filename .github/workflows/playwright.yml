@@ -1,24 +1,22 @@
 # .github/workflows/playwright.yml
-name: Playwright Tests - Multi Stage
+name: Playwright Tests
 
 on:
   push:
     branches: [ main ]
-
+  
 jobs:
-  install:
-    name: Install Dependencies
+  test:
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20' # You can change this as needed
 
       - name: Install dependencies
         run: npm install
@@ -26,42 +24,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-  test:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    needs: install
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Run Playwright tests
         run: npx playwright test
 
       - name: Upload Playwright report
-        if: always()
+        if: always() # Upload report even if tests fail
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report
-
-  report:
-    name: Report Stage
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Download report
-        uses: actions/download-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report
-
-      - name: List report contents (for debug)
-        run: ls -R playwright-report
