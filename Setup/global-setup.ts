@@ -3,7 +3,7 @@ import users from '../fixtures/UserCredentials.json';
 import { LoginPage } from '../PageObjects/LoginPage';
 
 async function globalSetup(config: FullConfig) {
-    const browser = await chromium.launch({headless:false});
+    const browser = await chromium.launch({headless:true});
     const page = await browser.newPage();
     const loginPage = new LoginPage(page);
 
