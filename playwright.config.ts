@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {
     baseURL: 'https://demo.haroldwaste.com',
-    headless: false, // Set to false only for debugging locally
+    headless: true, // Set to false only for debugging locally
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
