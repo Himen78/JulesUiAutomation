@@ -18,8 +18,8 @@ export default defineConfig({
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    trace: 'on-first-retry',
+    video: 'on',
+    trace: 'on',
     storageState: 'storageState.json',
   },
   // Directory to store test artifacts (screenshots, videos, etc.)

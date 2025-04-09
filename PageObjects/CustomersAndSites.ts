@@ -1,12 +1,12 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { Logger } from '../Utils/logger';
 
-export class SuppliersAndSitesPage {
+export class CustomerAndSitesPage {
 
     private supplierIcon: Locator;
-    private suppliersAndSitesButton: Locator;
-    private addSupplierButton: Locator;
-    private addNewSupplierHeader: Locator;
+    private customersAndSitesButton: Locator;
+    private addCustomerButton: Locator;
+    private addNewCustomerHeader: Locator;
     private usualNameTextBox: Locator;
     private legalEntityNameTextBox: Locator;
     private erpIdTextBox: Locator;
@@ -26,9 +26,9 @@ export class SuppliersAndSitesPage {
 
     constructor(private page: Page) {
         this.supplierIcon = this.page.locator('div[permission="SUPPLIERS,CUSTOMERS,CONTACTS"]');
-        this.suppliersAndSitesButton = this.page.getByRole('link', { name: 'Suppliers & Sites' });
-        this.addSupplierButton = this.page.getByRole('button', { name: 'Add a new supplier' });
-        this.addNewSupplierHeader = this.page.locator('//div[contains(text(),"Add a new supplier")]');
+        this.customersAndSitesButton = this.page.getByRole('link', { name: 'Customers & Sites' });
+        this.addCustomerButton = this.page.getByRole('button', { name: 'Add a new customer' });
+        this.addNewCustomerHeader = this.page.locator('//div[contains(text(),"Add a new customer")]');
         this.usualNameTextBox = this.page.locator('div[data-test-id="Company.companyName"] input');
         this.legalEntityNameTextBox = this.page.locator('div[data-test-id="Company.companyLegalName"] input');
         this.erpIdTextBox = this.page.locator('div[data-test-id="Company.erpId"] input');
@@ -47,31 +47,31 @@ export class SuppliersAndSitesPage {
         this.expandSectionContainer = this.page.locator('div[class="sc-jdAMXn iRaWtY"]');
     }
 
-    async clickSuppliersAndSitesButton() {
+    async clickCustomersAndSitesButton() {
         Logger.step('Hovering over Supplier icon');
         await this.supplierIcon.hover();
-        Logger.step('Waiting for Suppliers & Sites button to appear');
-        await this.suppliersAndSitesButton.waitFor({ state: 'visible' });
-        Logger.step('Clicking Suppliers & Sites button');
-        await this.suppliersAndSitesButton.click();
+        Logger.step('Waiting for Customers & Sites button to appear');
+        await this.customersAndSitesButton.waitFor({ state: 'visible' });
+        Logger.step('Clicking Customers & Sites button');
+        await this.customersAndSitesButton.click();
     }
 
-    async assertSupplierUrl(): Promise<void> {
-        Logger.step('Verifying Supplier URL contains "supplier-board"');
-        await expect(this.page).toHaveURL(/supplier-board/);
-        Logger.success('Successfully navigated to Supplier page');
+    async assertCustomersUrl(): Promise<void> {
+        Logger.step('Verifying if navigated to Customers URL');
+        await expect(this.page).toHaveURL(/customer-board/);
+        Logger.success('Successfully navigated to Customers page');
     }
 
-    async addaNewSupplier(supplierName: string, legalEntityName: string, erpId: string, legalForm: string, identificationCode: string, locationIdentificationCode: string): Promise<void> {
-        Logger.step('Clicking Add a new supplier button');
-        await this.addSupplierButton.click();
+    async addaNewCustomer(customerName: string, legalEntityName: string, erpId: string, legalForm: string, identificationCode: string, locationIdentificationCode: string): Promise<void> {
+        Logger.step('Clicking Add a new customer button');
+        await this.addCustomerButton.click();
 
-        Logger.step('Waiting for Add New Supplier header');
-        await expect(this.addNewSupplierHeader).toBeVisible();
+        Logger.step('Waiting for Add New Customer header');
+        await expect(this.addNewCustomerHeader).toBeVisible();
 
-        Logger.step('Filling in supplier details');
-        Logger.info(`Usual Name: ${supplierName}`);
-        await this.usualNameTextBox.fill(supplierName);
+        Logger.step('Filling customer form');
+        Logger.info(`Usual Name: ${customerName}`);
+        await this.usualNameTextBox.fill(customerName);
         await this.legalEntityNameTextBox.fill(legalEntityName);
         await this.erpIdTextBox.fill(erpId);
         await this.legalFormTextBox.fill(legalForm);
@@ -82,42 +82,42 @@ export class SuppliersAndSitesPage {
         await this.nextButton.click();
         await this.saveButton.click();
 
-        Logger.success('Supplier created successfully');
+        Logger.success('Customer created successfully');
     }
 
-    async searchComapnyNameAndVerifyDetails(supplierName: string, legalEntityName: string, legalFormName: string, identificationCodeValue: string, locationIdentificationCodeValue: string): Promise<void> {
-        Logger.step(`Searching for company: ${supplierName}`);
-        await this.searchByCompanyName.fill(supplierName);
+    async searchComapnyNameAndVerifyDetails(customerName: string, legalEntityName: string, legalFormName: string, identificationCodeValue: string, locationIdentificationCodeValue: string): Promise<void> {
+        Logger.step(`Searching for company: ${customerName}`);
+        await this.searchByCompanyName.fill(customerName);
 
-        const matchingCell = this.companyNameColumn.filter({ hasText: supplierName });
-        Logger.step('Waiting for matching table cell');
+        const matchingCell = this.companyNameColumn.filter({ hasText: customerName });
+        Logger.step('Waiting for matching cell in table');
         await expect(matchingCell).toBeVisible({ timeout: 5000 });
 
-        Logger.step('Iterating through table rows to find the supplier');
+        Logger.step('Iterating over table rows to find the company');
         const rows = await this.companyTableRows;
         const rowsCount = await rows.count();
         let found = false;
 
         for (let i = 0; i < rowsCount; i++) {
             const text = (await rows.nth(i).locator('td').nth(2).textContent())?.trim();
-            if (text === supplierName) {
-                Logger.info(`Supplier found at row ${i + 1}`);
+            if (text === customerName) {
+                Logger.info(`Company found at row ${i + 1}`);
                 found = true;
 
                 const seventhCell = rows.nth(i).locator('td').nth(7);
                 Logger.step('Clicking on toogle button to expand details');
                 await seventhCell.click();
 
-                Logger.step('Waiting for expanded section to be visible');
+                Logger.step('Waiting for expanded section');
                 await this.expandSectionContainer.waitFor({ state: 'visible', timeout: 3000 });
 
-                Logger.step('Verifying expanded details');
+                Logger.step('Verifying expanded values');
                 await expect(this.expandLegalEntityNameValue).toHaveText(legalEntityName);
                 await expect(this.expandLegalFormValue).toHaveText(legalFormName);
                 await expect(this.expandIdentificationCodeValue).toHaveText(identificationCodeValue);
                 await expect(this.expandLocationIdentificationCodeValue).toHaveText(locationIdentificationCodeValue);
 
-                Logger.success('Verified supplier details successfully');
+                Logger.success('Verified all expanded details successfully');
                 break;
             }
         }

@@ -1,1 +1,1 @@
-export const generateSupplierName = () => `Test Supplier_${Math.floor(Math.random() * 10000)}`;
+export const generateUsualName = () => `Test_Usual_${Math.floor(Math.random() * 10000)}`;
