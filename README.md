@@ -1,6 +1,6 @@
 # JulesUiAutomation
 
-# 🌐 Company Management UI Automation
+# 🌐 Jules UI Automation
 
 This project uses [Playwright](https://playwright.dev/) to automate UI testing for managing Customers & Suppliers within a web platform.
 
